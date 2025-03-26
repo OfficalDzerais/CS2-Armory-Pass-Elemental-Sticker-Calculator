@@ -1,0 +1,48 @@
+from flask import Flask, render_template, request
+from peewee import SqliteDatabase, Model, FloatField, DateTimeField
+import datetime
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+
+app = Flask(__name__)
+db = SqliteDatabase('database.db')
+
+class WaterIntake(Model):
+    amount = FloatField()
+    timestamp = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = db
+
+db.connect()
+db.create_tables([WaterIntake], safe=True)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/log', methods=['POST'])
+def log_water():
+    amount = float(request.form['amount'])
+    WaterIntake.create(amount=amount)
+    return render_template('result.html', message='Water intake logged!')
+
+@app.route('/stats')
+def stats():
+    data = WaterIntake.select()
+    df = pd.DataFrame([(entry.amount, entry.timestamp) for entry in data], columns=['Amount', 'Timestamp'])
+    
+    if not df.empty:
+        plt.figure()
+        df.groupby(df['Timestamp'].dt.hour)['Amount'].sum().plot(kind='bar')
+        plt.xlabel('Hour of the Day')
+        plt.ylabel('Water Intake (ml)')
+        plt.title('Water Intake by Hour')
+        plt.savefig('static/water_intake.png')
+        plt.close()
+    
+    return render_template('stats.html', image='static/water_intake.png')
+
+if __name__ == '__main__':
+    app.run(debug=True)
