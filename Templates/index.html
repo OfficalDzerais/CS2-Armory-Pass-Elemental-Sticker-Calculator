@@ -1,27 +1,83 @@
-<!DOCTYPE html>
-<html lang="lv">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hydration Kalkulators</title>
-</head>
-<body>
-    <h1>Hydration Kalkulators</h1>
-    
-    <!-- Forma ūdens patēriņa reģistrēšanai -->
-    <form action="/log" method="POST">
-        <label for="weight">Ievadi savu svaru (kg):</label>
-        <input type="number" name="weight" required>
-        
-        <label for="gender">Izvēlies savu dzimumu:</label>
-        <select name="gender" required>
+{% extends "base.html" %}
+{% block title %}Ūdens daudzuma aprēķins{% endblock %}
+{% block content %}
+  <h1 class="text-center mb-4">Ūdens daudzuma aprēķins</h1>
+  
+  <!-- Galvenā aprēķina forma -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <form action="{{ url_for('log_water') }}" method="POST">
+        <div class="mb-3">
+          <label for="weight" class="form-label">Svars (kg):</label>
+          <input type="number" class="form-control" id="weight" name="weight" placeholder="Ievadiet savu svaru" required min="1">
+        </div>
+        <div class="mb-3">
+          <label for="gender" class="form-label">Dzimums:</label>
+          <select class="form-select" id="gender" name="gender" required>
+            <option value="" disabled selected>Izvēlies savu dzimumu</option>
             <option value="male">Vīrietis</option>
             <option value="female">Sieviete</option>
-        </select>
-        
-        <button type="submit">Pievienot</button>
-    </form>
-    
-    <a href="/total">Apskatīt rezultātus</a>
-</body>
-</html>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Aprēķināt</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Animētā ūdens glāze -->
+  <div class="text-center">
+    <div class="water-glass" id="glass" onclick="toggleFall()">
+      <div class="water" id="water"></div>
+    </div>
+    <p class="mt-2">Klikšķini uz glāzes</p>
+  </div>
+
+  <!-- CSS stili ūdens glāzei un ūdens animācijai -->
+  <style>
+    .water-glass {
+      width: 150px;
+      height: 300px;
+      border: 5px solid #ccc;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      margin: 20px auto;
+      background: transparent;
+      transition: transform 1s ease; /* Glāzes rotācija */
+    }
+    /* Glāze nokrīt uz sāniem */
+    .water-glass.fallen {
+      transform: rotate(90deg);
+    }
+    .water {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;  /* Pilns ūdens līmenis sākumā */
+      background: #0d6efd;
+      transition: height 1s ease;  /* Smooth pāreja ūdens līmenim */
+    }
+    /* Kad ūdens "iztukšojas" */
+    .water.empty {
+      height: 0;
+    }
+  </style>
+
+  <!-- JavaScript animācijai: glāzes "kritiena" un ūdens iztukšošanas efektam -->
+  <script>
+    function toggleFall(){
+      const glass = document.getElementById('glass');
+      const water = document.getElementById('water');
+      // Ja glāze vēl nav nokritusi, aktivē nokrišanu un ūdens iztukšošanu
+      if (!glass.classList.contains('fallen')) {
+        glass.classList.add('fallen');
+        water.classList.add('empty');
+      } else {
+        // Pretējā gadījumā atjauno stāvokli – glāze uztaisās vertikāla un ūdens piepildās
+        glass.classList.remove('fallen');
+        water.classList.remove('empty');
+      }
+    }
+  </script>
+{% endblock %}
