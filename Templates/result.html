@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html lang="lv">
-<head>
-    <meta charset="UTF-8">
-    <title>Rezultāts</title>
-</head>
-<body>
-    <h1>{{ message }}</h1>
-    <p>Kopējais izdzertais ūdens daudzums: {{ recommended_intake }} ml</p>
-    <a href="/">Atgriezties sākumā</a>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Rezultāts{% endblock %}
+{% block content %}
+  <h1 class="text-center mb-4">Rezultāts</h1>
+  <div class="card">
+    <div class="card-body text-center">
+      <p class="mb-3">{{ message }}</p>
+      <h2>{{ recommended_intake }} ml</h2>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Veikt jaunu aprēķinu</a>
+    </div>
+  </div>
+{% endblock %}
