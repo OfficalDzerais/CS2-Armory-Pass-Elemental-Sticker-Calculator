@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="lv">
-<head>
-    <meta charset="UTF-8">
-    <title>Kļūda</title>
-</head>
-<body>
-    <h1>{{ message }}</h1>
-    <p><a href="{{ back_url }}">Atgriezties atpakaļ</a></p>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Kļūda{% endblock %}
+{% block content %}
+  <div class="alert alert-danger text-center" role="alert">
+    <h4 class="alert-heading">Kļūda!</h4>
+    <p>{{ message }}</p>
+    <hr>
+    <a href="{{ back_url }}" class="btn btn-danger">Atpakaļ</a>
+  </div>
+{% endblock %}
