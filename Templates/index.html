@@ -7,11 +7,21 @@
 </head>
 <body>
     <h1>Hydration Kalkulators</h1>
+    
+    <!-- Forma ūdens patēriņa reģistrēšanai -->
     <form action="/log" method="POST">
-        <label for="amount">Ievadi izdzertā ūdens daudzumu (ml):</label>
-        <input type="number" name="amount" required>
+        <label for="weight">Ievadi savu svaru (kg):</label>
+        <input type="number" name="weight" required>
+        
+        <label for="gender">Izvēlies savu dzimumu:</label>
+        <select name="gender" required>
+            <option value="male">Vīrietis</option>
+            <option value="female">Sieviete</option>
+        </select>
+        
         <button type="submit">Pievienot</button>
     </form>
-    <a href="/stats">Apskatīt statistiku</a>
+    
+    <a href="/total">Apskatīt rezultātus</a>
 </body>
 </html>
